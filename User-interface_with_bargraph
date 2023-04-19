@@ -1,0 +1,86 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QPushButton
+import pyqtgraph as pg
+import numpy as np
+
+
+class BarGraph(pg.BarGraphItem):
+   def mouseClickEvent(self, event):
+       print("clicked")
+
+
+class MainWindow(QMainWindow):
+   def __init__(self):
+       super().__init__()
+       self.setGeometry(100, 100, 800, 600)
+       self.setWindowTitle('Machine Learning Predictions')
+
+
+       # Create a label for the cool-looking text
+       label = QLabel(self)
+       label.setText('Machine Learning Predictions')
+       label.move(20, 20)
+
+
+       # Create a widget for the bar graph
+       graph_widget = pg.PlotWidget(self)
+       graph_widget.setGeometry(20, 50, 500, 400)
+       self.plot(graph_widget)
+
+
+       # Create a widget for the text box and button
+       widget = QWidget(self)
+       widget.setGeometry(550, 50, 200, 100)
+
+
+       # Create a label for the text box
+       label = QLabel(widget)
+       label.setText('Enter patient treatment plan:')
+       label.move(10, 10)
+
+
+       # Create the text box
+       self.text_box = QLineEdit(widget)
+       self.text_box.setGeometry(10, 30, 180, 30)
+
+
+       # Create the submit button
+       button = QPushButton(widget)
+       button.setText('Submit')
+       button.setGeometry(60, 70, 80, 20)
+       button.clicked.connect(self.submit)
+
+
+   def plot(self, graph_widget):
+       x = np.arange(10)
+       y1 = np.sin(x)
+       y2 = 1.1 * np.sin(x + 1)
+       y3 = 1.2 * np.sin(x + 2)
+
+
+       bg1 = pg.BarGraphItem(x=x, height=y1, width=0.3, brush='r')
+       bg2 = pg.BarGraphItem(x=x + 0.33, height=y2, width=0.3, brush='g')
+       bg3 = pg.BarGraphItem(x=x + 0.66, height=y3, width=0.3, brush='b')
+
+
+       graph_widget.addItem(bg1)
+       graph_widget.addItem(bg2)
+       graph_widget.addItem(bg3)
+
+
+       bg = BarGraph(x=x, y=y1 * 0.3 + 2, height=0.4 + y1 * 0.2, width=0.8)
+       graph_widget.addItem(bg)
+
+
+   def submit(self):
+       # Handle the submit button click event
+       treatment_plan = self.text_box.text()
+       print('Treatment plan submitted:', treatment_plan)
+
+
+if __name__ == '__main__':
+   app = QApplication(sys.argv)
+   main_window = MainWindow()
+   main_window.show()
+   status = app.exec_()
+   sys.exit(status)
