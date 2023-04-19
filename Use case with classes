@@ -1,0 +1,57 @@
+import sys
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QTextEdit
+from PyQt6.QtCore import Qt
+
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Set the window title and size
+        self.setWindowTitle('Machine Learning Prediction')
+        self.setGeometry(100, 100, 800, 600)
+
+        # Create a label for the result and center it
+        self.result_label = QLabel('No prediction yet.', self)
+        self.result_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Create a text box for the doctor to enter the treatment plan
+        self.treatment_plan_text = QTextEdit(self)
+        self.treatment_plan_text.setPlaceholderText('Enter treatment plan here...')
+
+        # Create a button to submit the treatment plan
+        self.submit_button = QPushButton('Submit', self)
+        self.submit_button.clicked.connect(self.submit_treatment_plan)
+
+        # Create a horizontal layout for the text box and submit button
+        input_layout = QHBoxLayout()
+        input_layout.addWidget(self.treatment_plan_text)
+        input_layout.addWidget(self.submit_button)
+
+        # Create a vertical layout for the label and input layout
+        main_layout = QVBoxLayout(self)
+        main_layout.addWidget(self.result_label)
+        main_layout.addLayout(input_layout)
+
+    def submit_treatment_plan(self):
+        # Get the treatment plan text from the text box
+        treatment_plan = self.treatment_plan_text.toPlainText()
+
+        # Clear the text box
+        self.treatment_plan_text.clear()
+
+        # Do machine learning prediction using the treatment plan and update the label
+        prediction = 'Sample prediction'
+        self.result_label.setText(prediction)
+
+if __name__ == '__main__':
+    # Create the application instance
+    app = QApplication(sys.argv)
+
+    # Create the main window
+    window = MainWindow()
+
+    # Show the main window
+    window.show()
+
+    # Run the event loop
+    sys.exit(app.exec())
