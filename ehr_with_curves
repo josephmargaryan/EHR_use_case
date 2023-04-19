@@ -1,0 +1,60 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QPushButton
+import pyqtgraph as pg
+import numpy as np
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle('Machine Learning Predictions')
+
+        # Create a label for the cool-looking text
+        label = QLabel(self)
+        label.setText('Machine Learning Predictions')
+        label.move(20, 20)
+
+        # Create a widget for the plot
+        plot_widget = pg.PlotWidget(self)
+        plot_widget.setGeometry(20, 50, 500, 400)
+        self.plot(plot_widget)
+
+        # Create a widget for the text box and button
+        widget = QWidget(self)
+        widget.setGeometry(550, 50, 200, 100)
+
+        # Create a label for the text box
+        label = QLabel(widget)
+        label.setText('Enter patient treatment plan:')
+        label.move(10, 10)
+
+        # Create the text box
+        self.text_box = QLineEdit(widget)
+        self.text_box.setGeometry(10, 30, 180, 30)
+
+        # Create the submit button
+        button = QPushButton(widget)
+        button.setText('Submit')
+        button.setGeometry(60, 70, 80, 20)
+        button.clicked.connect(self.submit)
+
+    def plot(self, plot_widget):
+        x = np.arange(1000)
+        y = np.random.normal(size=(3, 1000))
+
+        for i in range(3):
+            plot_widget.plot(x, y[i], pen=(i, 3))
+
+    def submit(self):
+        # Handle the submit button click event
+        treatment_plan = self.text_box.text()
+        print('Treatment plan submitted:', treatment_plan)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    status = app.exec_()
+    sys.exit(status)
